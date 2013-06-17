@@ -1,5 +1,7 @@
 #GrongusMap
 import grongusRoom
+import GrongusExceptions
+import GrongusCharacter
 class GrongusMap:
 	"""initialize the map, that is set the maximum boundaries for the height and width
 """
@@ -9,8 +11,8 @@ class GrongusMap:
 		
 		self.gameMap = []
 		self.generateGameMap()
-		self.printMap()
-		roomList = open('roomList,'r')
+		#self.printMap()
+		#roomList = open('roomList,'r')
 		
 	#	"""map generation.  Early on, it will only create a blank set of rooms
 #		using python dictionaries.  Will call helper functions to generate#
@@ -31,12 +33,22 @@ class GrongusMap:
 	def printMap(self):
 		for i in range(self.y):
 			for j in range(self.x):	
-				self.gameMap[i][j].printRoom()
+				self.gameMap[j][i].printRoom()
 				
 			print("")	
+	def startPosition(self,x,y,player):
+		self.gameMap[x][y].discoverRoom(player.icon)
+	def movePlayer(self, x,y,player):
 		
-		
-	
+		if self.gameMap[player.coords['x']][player.coords['y']].discovered == True:
+			self.gameMap[x][y].updateIcon(player.icon)
+			self.gameMap[player.coords['x']][player.coords['y']].roomLeft()
+			player.movePlayer(x,y)
+			
+		else:
+			self.gameMap[x][y].discoverRoom(player.icon)
+			self.gameMap[player.coords['x']][player.coords['y']].roomLeft()
+			player.movePlayer(x,y)
 		
 	
 		
