@@ -21,8 +21,10 @@ class GrongusMain:
 		random.seed()
 		self.x = 4 #int(random.randint(1,4))
 		self.y = 4 #int(random.randint(1,4))
+		self.grongusX = 0
+		self.grongusY = 0
 		#print("x: ",self.x,"y:",self.y)
-		self.grongusMap = GrongusMap.GrongusMap(self.x,self.y)
+		self.grongusMap = GrongusMap.GrongusMap(self.x,self.y,self.grongusX,self.grongusY)
 
 grongusMain = GrongusMain()
 player = GrongusCharacter.Player(grongusMain.x-1,grongusMain.y-1)
@@ -38,23 +40,20 @@ while True:
 		elif action == "n" or action == "north":
 			x = player.coords['x'] 
 			y = player.coords['y'] -1
-			if y < 0:
-				raise GrongusExceptions.OutOfBounds(y,"You have reached the top of the cave")
 		elif action == "s" or action == "south":
 			x = player.coords['x']
 			y = player.coords['y'] + 1
-			if y >= grongusMain.y:
-				raise GrongusExceptions.OutOfBounds(y,"You have reached the bottom of the cave")
 		elif action == "w" or action == "west":
 			x = player.coords['x'] - 1
 			y = player.coords['y']
-			if x < 0:
-				raise GrongusExceptions.OutOfBounds(y,"You have reached the edge of the cave")
-		elif action == "x" or action == "east":
+		elif action == "e" or action == "east":
 			x = player.coords['x'] + 1
 			y = player.coords['y']
-			if x >= grongusMain.x:
-				raise GrongusExceptions.OutOfBounds(y,"You have reached the edge of the cave")
+		if x >= grongusMain.x or x < 0 or y >= grongusMain.y or y < 0:
+			x = player.coords['x']
+			y = player.coords['y']
+			raise GrongusExceptions.OutOfBounds(y,"You have reached the edge of the cave")
+		
 		grongusMain.grongusMap.movePlayer(x,y,player)
 		grongusMain.grongusMap.printMap()
 	except GrongusExceptions.OutOfBounds as e:

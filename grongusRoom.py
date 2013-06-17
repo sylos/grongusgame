@@ -1,5 +1,5 @@
 #For room stuff
-import random
+import GrongusCharacter
 class Room:
 	"""This is not quite how I want to do rooms.  I think maybe
 		I want to create a bunch of subclasses that have an "apply to user function"
@@ -7,18 +7,19 @@ class Room:
 		I can use XML or something 
 	"""
 
-	energyCost = 1
-	healPlayer = False
-	canContainGrongus = True
-	thingsInRoom = {}
+	
 	def __init__(self,x,y):
+		self.energyCost = 1
+		self.healPlayer = False
+		self.canContainGrongus = True
+		self.thingsInRoom = {}
 		self.roomName = "Room"
 		self.roomCoords = {'x':x, 'y':y}
 		self.discovered = False
 		self.roomImage = 'X'
-		random.seed()
+		#random.seed()
 		#self.roomTypeList = read(roomTypeList)
-		self.roomValue = random.randint(0,100)
+		#self.roomValue = random.randint(0,100)
 		#self.generateRoomType(self.roomValue)
 	def printRoomCoords(self):
 		print (self.roomName, end=" "),
@@ -27,7 +28,12 @@ class Room:
 	def printRoom(self):
 		print(self.roomImage,end = "")
 	
+	
 		
+
+	def insertGrongus(self):
+		print("INSERTED")
+		self.thingsInRoom["grongus"] = GrongusCharacter.Grongus(self.roomCoords['x'],self.roomCoords['y'])
 	#def generateRoom(self):
 	def updateIcon(self,icon):
 		self.roomImage = icon

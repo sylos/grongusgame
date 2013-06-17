@@ -5,12 +5,13 @@ import GrongusCharacter
 class GrongusMap:
 	"""initialize the map, that is set the maximum boundaries for the height and width
 """
-	def __init__(self,x,y):
+	def __init__(self,x,y,grongusX,grongusY):
 		self.x = x
 		self.y = y
 		
 		self.gameMap = []
 		self.generateGameMap()
+		self.gameMap[grongusX][grongusY].insertGrongus()
 		#self.printMap()
 		#roomList = open('roomList,'r')
 		
@@ -38,17 +39,22 @@ class GrongusMap:
 			print("")	
 	def startPosition(self,x,y,player):
 		self.gameMap[x][y].discoverRoom(player.icon)
+		
 	def movePlayer(self, x,y,player):
 		
 		if self.gameMap[player.coords['x']][player.coords['y']].discovered == True:
 			self.gameMap[x][y].updateIcon(player.icon)
 			self.gameMap[player.coords['x']][player.coords['y']].roomLeft()
-			player.movePlayer(x,y)
+			player.updatePlayerPosition(x,y)
+			
+		elif "grongus" in self.gameMap[x][y].thingsInRoom :
+			print ("You see the awful Grongus",self.gameMap[x][y].thingsInRoom["grongus"].icon)
+			self.gameMap[x][y].updateIcon(self.gameMap[x][y].thingsInRoom["grongus"].icon)
 			
 		else:
 			self.gameMap[x][y].discoverRoom(player.icon)
 			self.gameMap[player.coords['x']][player.coords['y']].roomLeft()
-			player.movePlayer(x,y)
+			player.updatePlayerPosition(x,y)
 		
 	
 		

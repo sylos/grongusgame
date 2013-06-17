@@ -15,13 +15,13 @@ class Player(Character):
 			try to write in such a manner that it will be
 			expandable
 		"""
-		Character.health = 100
-		Character.icon = "T"
+		self.health = 100
+		self.icon = "T"
 		self.energy = 100
 		self.coords = {'x':xcoord, 'y':ycoord}
 		
 	#for updating the current player coordinates
-	def movePlayer(self,newX,newY):
+	def updatePlayerPosition(self,newX,newY):
 		self.coords['x'] = newX
 		self.coords['y'] = newY
 		
@@ -33,8 +33,8 @@ class Player(Character):
 		
 class Grongus(Character):
 		def __init__(self, xcoord,ycoord):
-			Character.health = 1
-			Character.icon = "B"
+			self.health = 1
+			self.icon = "B"
 			self.energy = 0
 			self.coords = {'x':xcoord,'y':ycoord}
 			
