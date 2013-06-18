@@ -32,13 +32,14 @@ class Player(Character):
 		print(self.coords)
 		
 class Grongus(Character):
-		def __init__(self, xcoord,ycoord):
+		def __init__(self):
 			self.health = 1
 			self.icon = "B"
 			self.energy = 0
-			self.coords = {'x':xcoord,'y':ycoord}
+			self.coords = {}
 			
-			
+		def updatePosition(self, x ,y):
+			self.coords = {'x':x,'y':y}
 		
 
 		

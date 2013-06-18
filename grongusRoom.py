@@ -13,34 +13,31 @@ class Room:
 		self.healPlayer = False
 		self.canContainGrongus = True
 		self.thingsInRoom = {}
-		self.roomName = "Room"
 		self.roomCoords = {'x':x, 'y':y}
 		self.discovered = False
 		self.roomImage = 'X'
-		#random.seed()
-		#self.roomTypeList = read(roomTypeList)
-		#self.roomValue = random.randint(0,100)
-		#self.generateRoomType(self.roomValue)
+		#self.roomDiscoveredImage = 'O'
+		
 	def printRoomCoords(self):
 		print (self.roomName, end=" "),
 		print ("X:",self.roomCoords['x'], end = " ")
 		print ("Y:", self.roomCoords['y'],end=" ")
+	
 	def printRoom(self):
-		print(self.roomImage,end = "")
-	
-	
 		
+		print(self.roomImage,end = "")	
 
-	def insertGrongus(self):
-		print("INSERTED")
-		self.thingsInRoom["grongus"] = GrongusCharacter.Grongus(self.roomCoords['x'],self.roomCoords['y'])
-	#def generateRoom(self):
-	def updateIcon(self,icon):
-		self.roomImage = icon
+	def addToRoom(self,key,thing):
+		self.thingsInRoom[key] = thing
 		
-	def discoverRoom(self,icon):
-		self.discovered = True
+		#icon is the new room icon, if there is one.  Status is whether the room is discovered or not
+	def updateRoom(self,icon,status):
 		self.roomImage = icon
-		
+		self.discovered = status
+	def containsThing(self,thing):
+		if thing in self.thingsInRoom:
+			return True
+		return False
+	#not needed, leaving in for sanity	
 	def roomLeft(self):
 		self.roomImage = "O"

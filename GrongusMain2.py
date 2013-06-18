@@ -44,7 +44,6 @@ while True:
 		
 		map.playerMoved(x,y,player)
 		player.updatePlayerPosition(x,y)
-		print("Player Position",x,y)
 		map.printMap()
 	except GrongusExceptions.OutOfBounds as e:
 		print(e.message)
