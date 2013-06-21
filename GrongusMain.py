@@ -71,15 +71,15 @@ def gameControl(player,grongus,map,mapWidth,mapHeight):
 			
 			if action == "n" or action == "north": #y-1
 				x = player.coords['x'] 
-				y = GrongusActions.addDirection(player.coords['y'],-1)
+				y = addDirection(player.coords['y'],-1)
 			elif action == "s" or action == "south": #y+1
 				x = player.coords['x']
-				y = GrongusActions.addDirection(player.coords['y'],1)
+				y = addDirection(player.coords['y'],1)
 			elif action == "w" or action == "west": # x-1
-				x = GrongusActions.addDirection(player.coords['x'],-1)
+				x = addDirection(player.coords['x'],-1)
 				y = player.coords['y']
 			elif action == "e" or action == "east":#x+1
-				x = GrongusActions.addDirection(player.coords['x'],1)
+				x = addDirection(player.coords['x'],1)
 				y = player.coords['y']
 			#attack command tree
 			elif action == "a" or action == "attack":
@@ -88,27 +88,21 @@ def gameControl(player,grongus,map,mapWidth,mapHeight):
 				attackD = input("Which direction?").lower()
 				if attackD == "north" or attackD == "n": #y-1
 					attackX = player.coords['x'] 
-					attackY = GrongusActions.addDirection(player.coords['y'],-1)	
+					attackY = addDirection(player.coords['y'],-1)	
 				elif attackD == "south" or attackD == "s": #y+1
 					attackX = player.coords['x'] 
-					attackY = GrongusActions.addDirection(player.coords['y'],1) 
+					attackY = addDirection(player.coords['y'],1) 
 				elif attackD == "west" or attackD == "w":#x-1
-					attackX = GrongusActions.addDirection(player.coords['x'],-1) 
+					attackX = addDirection(player.coords['x'],-1) 
 					attackY = player.coords['y'] 
 				elif attackD == "east" or attackD == "e": #x+1
-					attackX = GrongusActions.addDirection(player.coords['x'],1)
+					attackX = addDirection(player.coords['x'],1)
 					attackY = player.coords['y'] 
-				damage = player.attack(player.items["spear"],attackD,1)
-				#try:
-				for key in map.gameMap[attackX][attackY].thingsInRoom:
-					object = map.gameMap[attackX][attackY].thingsInRoom[key]
-					print("Attacking: ",object.name, " for ", damage," damage!"),
-					object.takeDamage(damage)
-					print("It has ",object.curHealth," HP remaining")
+				
+				damage = player.validAttack(player.items["Spear"],1)
+				map.gameMap[attackX][attackY].attackRoomContents(damage)
 					
-				#except GrongusExceptions.NothingThere as e:
-				#	print (e.msg)
-				#
+					
 			elif action == "new game" or action == "ng":
 				newGame()
 			else:
@@ -123,7 +117,7 @@ def gameControl(player,grongus,map,mapWidth,mapHeight):
 				raise GrongusExceptions.OutOfBounds(y,"You have reached the edge of the cave")
 			
 			map.playerMoved(x,y,player,grongus)
-			player.printPlayer()
+			player.printRawStats()
 			map.printMap()
 			endGame(player,grongus)
 		except GrongusExceptions.OutOfBounds as e:

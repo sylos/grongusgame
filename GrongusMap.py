@@ -24,11 +24,11 @@ class GrongusMap:
 	#invariants:x and y of map
 	
 	def generateGameMap(self,randCoords,grongus):
-		self.gameMap = [[GrongusRoom.Room(i,j) for i in range(self.x)] for j in
+		self.gameMap = [[GrongusRoom.SandRoom(i,j) for i in range(self.x)] for j in
 		range(self.y)]
 		x = randCoords['x']
 		y = randCoords['y']
-		self.gameMap[x][y].addToRoom("grongus",grongus)
+		self.gameMap[x][y].addToContents("grongus",grongus)
 		grongus.updatePosition(randCoords['x'],randCoords['y'])
 				
 		print("Grongus Located at: ",x,",",y)
@@ -50,15 +50,16 @@ class GrongusMap:
 		
 	def playerMoved(self, x,y,player,grongus):
 		roomDiscovered = True
-		if self.gameMap[x][y].containsThing("grongus") :
+		
+		if self.gameMap[x][y].containsObject("grongus") :
 			self.gameMap[x][y].updateRoom(grongus.icon, roomDiscovered)
 			print("Found the Grongus!")
 			return
 		
 		self.gameMap[x][y].applyRoomEffects(player)
-		self.gameMap[player.coords['x']][player.coords['y']].updateRoom("O",roomDiscovered)
-		self.gameMap[x][y].updateRoom(player.icon, roomDiscovered)
-		player.updatePlayerPosition(x,y)
+		self.gameMap[player.coords['x']][player.coords['y']].roomExited()
+		self.gameMap[x][y].roomEntered(player.icon)
+		player.updatePosition(x,y)
 		
 		
 		#"""

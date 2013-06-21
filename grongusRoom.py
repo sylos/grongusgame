@@ -1,57 +1,75 @@
+#GrongusRoom2
+
 #For room stuff
 import GrongusCharacter
-class SandRoom:
-	def init(self,x,y):
-		self.energyCost = 4
-		self.discovered = False
-		self.healPlayer = False
-		self.canContainGrongus = True
-		self.thingsInRoom = {}
-		self.roomCoords = {'x':x,'y':y}
-		self.roomImage = 'S'
-		
-class Room:
-	"""This is not quite how I want to do rooms.  I think maybe
-		I want to create a bunch of subclasses that have an "apply to user function"
-		and call that.  Allows for more expandability, I think.  Perhaps, in the longest of runs
-		I can use XML or something 
-	"""
 
+class Room:
+	#name,x coords, y coords, energyCost,discovered,canContainGrongus,icon
+	def __init__(self,name,x,y,energyCost,discovered,canContain,icon):
+		self.name = name 
+		self.roomCoords = {'x':x,'y':y}
+		self.energyCost = energyCost
+		self.discovered = discovered
+		self.canContainGrongus = canContain
+		self.HiddenImage = "X"
+		self.revealedImage = icon
+		self.roomImage = self.HiddenImage
+		self.roomContents = {}
 	
-	def __init__(self,x,y):
-		self.energyCost = 1
-		self.healPlayer = False
-		self.canContainGrongus = True
-		self.thingsInRoom = {}
-		self.roomCoords = {'x':x, 'y':y}
-		self.discovered = False
-		self.roomImage = 'X'
-		#self.roomDiscoveredImage = 'O'
-		
-	def printRoomCoords(self):
-		print (self.roomName, end=" "),
-		print ("X:",self.roomCoords['x'], end = " ")
-		print ("Y:", self.roomCoords['y'],end=" ")
 	
-	def printRoom(self):
-		print(self.roomImage,end = "")	
+	def roomEntered(self,icon):
+		self.roomImage = icon
+		self.discovered = True
 		
-	def addToRoom(self,key,thing):
+	def roomExited(self):
+		self.roomImage = self.revealedImage
 		
-		self.thingsInRoom[key] = thing
-	#I don't like how this works out.  Seems..inefficient. Ponder how 
-	#to apply the room effects to the player without having to go /into/
-	#the room.
-	def applyRoomEffects(self,player):
-		#print("Applied Room effects!")
-		player.curEnergy -= 1
 	def updateRoom(self,icon,status):
 		self.roomImage = icon
 		self.discovered = status
-	def containsThing(self,thing):
-		if thing in self.thingsInRoom:
+		
+	def printRoomCoords(self):
+		print (self.roomName, end = " ")
+		print (self.roomCoords)
+	
+	def printRoom(self):
+		print(self.roomImage,end = "")		
+	
+	def addToContents(self,key,thing):
+		self.roomContents[key] = thing
+		
+		
+	"""Note:I recommend overriding this with subclass method, since 
+		each room will want to have special effects it does to the player
+	"""
+	def applyRoomEffects(self,player):
+		player.curEnergy -= self.energyCost
+		
+	def containsObject(self,thing):
+		if thing in self.roomContents:
 			return True
-		return False
-	#not needed, leaving in for sanity	
-	def roomLeft(self):
-		self.roomImage = "O"
+	
+	def attackRoomContents(self,damage):
+		for key in self.roomContents:
+			object = self.roomContents[key]
+			print("Attacking: ",object.name, " for ", damage," damage!")
+			object.takeDamage(damage)
+			print("It has ",object.curHealth," HP remaining")
+			
+class SandRoom(Room):
+	
+	def __init__(self,x,y):
+		#name,x coords, y coords, energyCost,discovered,canContainGrongus,icon
+		super().__init__("Sand",x,y,1,False,True,"S")
+	
+		
+	
+	
+		
+	
+
+	
+	
+	
+	
+	
