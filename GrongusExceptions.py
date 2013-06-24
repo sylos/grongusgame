@@ -13,17 +13,21 @@ class OutOfBounds(Error):
 class NothingThere(Error):
 	"""for when attacking something that doesn't exist"""
 	def __init__(self):
-		self.msg = "There's nothing to attack there!"
+		self.message = "There's nothing to attack there!"
 		
 class NotEnoughEnergy(Error):
 	def __init__(self):
-		self.msg = "Not enough energy!"
+		self.message = "Not enough energy!"
 		
 class NotWithinRange(Error):
 	def __init__(self,target):
 		
-		self.msg = target + " not within range!"
+		self.message = target + " not within range!"
 		
 class containsObject(Error):
 	def __init__ (self,msg):
-		self.msg = msg
+		self.message = msg
+		
+class NonCardinalDirection(Error):
+	def __init__(self,msg):
+		self.message = msg

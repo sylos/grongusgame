@@ -2,6 +2,8 @@
 import GrongusRoom
 import GrongusExceptions
 import GrongusCharacter
+
+import random
 class GrongusMap:
 	"""initialize the map, that is set the maximum boundaries for the height and width
 """
@@ -9,22 +11,43 @@ class GrongusMap:
 		self.x = x
 		self.y = y
 		
-		
-		
 		self.gameMap = {}
 		self.generateGameMap(randCoords,grongus)
 		
 		self.gameMap[0][y-1].updateRoom(player.icon,True)
 		self.printMap()
-		
-		
-	#	map generation.  Early on, it will only create a blank set of rooms
-	#	using python dictionaries.  Will call helper functions to generate#
-	#actual contents later.  
-	#invariants:x and y of map
+	def roomSounds(self,player):
 	
+		for x,y in self.gameMap:
+			self.gameMap[x][y].roomSounds(player)
+			
+	def roomOpen(self):
+		#f = open('roomlist.txt','r')
+		#rooms = {}
+		#for line in f:
+		#	k,v, = line.strip().split(' ')
+		#	rooms[k.strip()] = float(v.strip())
+		#f.close()
+		#print (rooms)
+		rooms = {GrongusRoom.SandRoom:90,GrongusRoom.RestPool:10}
+		return rooms
+		
+	def generateRoom(self,i,j):
+		total = 0
+		winner = 0
+		rooms = self.roomOpen()
+		for key, value in rooms.items():
+			total+= value
+			if random.random() * total < value:
+				winner = key
+		return winner(i,j)
+				
+		
+		
 	def generateGameMap(self,randCoords,grongus):
-		self.gameMap = [[GrongusRoom.SandRoom(i,j) for i in range(self.x)] for j in
+		#rooms = self.roomOpen()
+		
+		self.gameMap = [[self.generateRoom(i,j) for i in range(self.x)] for j in
 		range(self.y)]
 		x = randCoords['x']
 		y = randCoords['y']
@@ -54,27 +77,14 @@ class GrongusMap:
 		if self.gameMap[x][y].containsObject("grongus") :
 			self.gameMap[x][y].updateRoom(grongus.icon, roomDiscovered)
 			print("Found the Grongus!")
+			
 			return
-		
+		print("Not found the grongus")
 		self.gameMap[x][y].applyRoomEffects(player)
+		self.roomSounds()
 		self.gameMap[player.coords['x']][player.coords['y']].roomExited()
 		self.gameMap[x][y].roomEntered(player.icon)
 		player.updatePosition(x,y)
 		
-		
-		#"""
-	#		if self.gameMap[player.coords['x']][player.coords['y']].discovered == True:
-#			self.gameMap[x][y].updateIcon(player.icon)
-	#		self.gameMap[player.coords['x']][player.coords['y']].roomLeft()
-	#		player.updatePlayerPosition(x,y)
-			
-	#		elif "grongus" in self.gameMap[x][y].thingsInRoom :
-	#		print ("You see the awful Grongus",self.gameMap[x][y].thingsInRoom["grongus"].icon)
-	#		self.gameMap[x][y].updateIcon(self.gameMap[x][y].thingsInRoom["grongus"].icon)
-	#		else:
-	#		self.gameMap[x][y].discoverRoom(player.icon)
-	#		self.gameMap[player.coords['x']][player.coords['y']].roomLeft()
-	#		player.updatePlayerPosition(x,y)
-	#	"""
 	
 		

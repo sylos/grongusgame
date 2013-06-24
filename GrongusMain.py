@@ -2,7 +2,6 @@
 import GrongusExceptions
 import GrongusMap
 import GrongusCharacter
-#import GrongusActions
 import random
 import sys
 
@@ -54,14 +53,36 @@ def endGame(player,grongus):
 		newGame()
 	else:
 		sys.exit()
+
+def attackDirection(player,map):
+	x = player.coords['x']
+	y = player.coords['y']
+	attackD = input("Which direction?").lower()
+	if attackD == "north" or attackD == "n": #y-1
+		y = addDirection(player.coords['y'],-1)	
 		
+	elif attackD == "south" or attackD == "s": #y+1
+		y = addDirection(player.coords['y'],1) 
+		
+	elif attackD == "west" or attackD == "w":#x-1
+		x = addDirection(player.coords['x'],-1) 
+		
+	elif attackD == "east" or attackD == "e": #x+1
+		x = addDirection(player.coords['x'],1)
+		
+	else:
+		raise GrongusExceptions.NonCardinalDirection("Please enter a cardinal direction")
+	
+	if x >= (map.x + 1) or x < 0 or y >= (map.y + 1) or y < 0:
+		raise GrongusExceptions.OutOfBounds(y,"You attack a wall.")
+	return x,y
 def addDirection(thing, amount):
 	thing += amount
 	return thing
 		
 def gameControl(player,grongus,map,mapWidth,mapHeight):
-	x = 0
-	y = 0
+	x = player.coords['x']
+	y = player.coords['y']
 	
 	#insert exceptions and flow control for game.  Will do after refactoring of other code.
 	while True:
@@ -70,45 +91,25 @@ def gameControl(player,grongus,map,mapWidth,mapHeight):
 			quitProgram(action)
 			
 			if action == "n" or action == "north": #y-1
-				x = player.coords['x'] 
 				y = addDirection(player.coords['y'],-1)
 			elif action == "s" or action == "south": #y+1
-				x = player.coords['x']
 				y = addDirection(player.coords['y'],1)
 			elif action == "w" or action == "west": # x-1
 				x = addDirection(player.coords['x'],-1)
-				y = player.coords['y']
 			elif action == "e" or action == "east":#x+1
 				x = addDirection(player.coords['x'],1)
-				y = player.coords['y']
 			#attack command tree
 			elif action == "a" or action == "attack":
-				x = player.coords['x']
-				y = player.coords['y']
-				attackD = input("Which direction?").lower()
-				if attackD == "north" or attackD == "n": #y-1
-					attackX = player.coords['x'] 
-					attackY = addDirection(player.coords['y'],-1)	
-				elif attackD == "south" or attackD == "s": #y+1
-					attackX = player.coords['x'] 
-					attackY = addDirection(player.coords['y'],1) 
-				elif attackD == "west" or attackD == "w":#x-1
-					attackX = addDirection(player.coords['x'],-1) 
-					attackY = player.coords['y'] 
-				elif attackD == "east" or attackD == "e": #x+1
-					attackX = addDirection(player.coords['x'],1)
-					attackY = player.coords['y'] 
-				
+				coords = attackDirection(player,map)
 				damage = player.validAttack(player.items["Spear"],1)
-				map.gameMap[attackX][attackY].attackRoomContents(damage)
-					
-					
+				map.gameMap[coords[0]][coords[1]].attackRoomContents(damage)
 			elif action == "new game" or action == "ng":
 				newGame()
 			else:
-				print("Please enter a proper command")
 				x = player.coords['x']
 				y = player.coords['y']
+				raise GrongusExceptions.NonCardinalDirection("Please enter a cardinal direction")
+				
 				
 			if x >= mapWidth or x < 0 or y >= mapHeight or y < 0:
 				x = player.coords['x']
@@ -120,7 +121,10 @@ def gameControl(player,grongus,map,mapWidth,mapHeight):
 			player.printRawStats()
 			map.printMap()
 			endGame(player,grongus)
+		except GrongusExceptions.NonCardinalDirection as e:
+			print (e.message)
 		except GrongusExceptions.OutOfBounds as e:
 			print(e.message)
+		
 			
 newGame()

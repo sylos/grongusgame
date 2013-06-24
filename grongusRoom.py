@@ -16,6 +16,8 @@ class Room:
 		self.roomImage = self.HiddenImage
 		self.roomContents = {}
 	
+	def roomSounds(self,player):
+		if player.coords
 	
 	def roomEntered(self,icon):
 		self.roomImage = icon
@@ -63,13 +65,22 @@ class SandRoom(Room):
 		super().__init__("Sand",x,y,1,False,True,"S")
 	
 		
+class RestPool(Room):
 	
-	
+	def __init__(self,x,y):
+	#name,x coords, y coords, energyCost,discovered,canContainGrongus,icon
+		super().__init__("Resting Pool",x,y,0,False, False,"W")
 		
-	
+		
+	def applyRoomEffects(self,player):
+		player.curEnergy += 10
 
 	
+class BlackPit(Room):
+	def __init__(self,x,y):
+	#name,x coords, y coords, energyCost,discovered,canContainGrongus,icon
+		super().init__("Black Pit",x,y,1,False,False,"O")
 	
-	
-	
+	def applyRoomEffects(self,player):
+		player.curHealth = 0
 	
